@@ -31,24 +31,33 @@ def preprocess_data_a2i_url():
     data = pd.read_csv(A2I_URL + last_day_url)
 
     pivoted = pd.pivot_table(data, 
-                            values='positive_cases', 
-                            index='dis_name', 
-                            columns='tdate', 
-                            fill_value=0, ).iloc[1:, ::-1].iloc[:, 1:]
+                            values='cases_combined', 
+                            index='district', 
+                            columns='test_date', 
+                            fill_value=0, )
+
+    pivoted = pivoted.iloc[:, ::-1].iloc[:, 1:]
 
     replacement_dict = {
-        'Nawabganj':	'Chapainawabganj',
-        'Chittagong':	'Chattogram',
-        'Comilla':	'Cumilla',
+        'CHAPAINABABGANJ':	'Chapainawabganj',
+        'CHATTOGRAM':	'Chattogram',
+        'CUMILLA':	'Cumilla',
         'Dhaka':	'Dhaka City',
         'Maulvibazar':	'Moulvibazar',
-        'Patuakhali':	'Potuakhali'
+	'BARISHAL':	'Barisal',
+        'Patuakhali':	'Potuakhali',
+	'COXS BAZAR':	"Cox's Bazar",
+	'JASHORE':	'Jessore',
+	'KISHOREGANJ':	'Kishoreganj',
+	'BOGURA':	'Bogura',
+        'Brahmanbaria': 'Brahamanbaria',
     }
 
     for key, val in replacement_dict.items():
         pivoted.index = pivoted.index.str.replace(key, val)
 
     pivoted = pivoted.sort_index()
+    # print(pivoted.index)
     pivoted.loc['Grand Total'] = pivoted.sum(axis=0)
     return pivoted.T
 
@@ -86,6 +95,9 @@ def preprocess_data():
     for column in data.columns:
         district_data = data[column].iloc[::-1]
         district_data_smoothed = district_data.rolling(7, min_periods=1).mean(std=2).round()
+        if len(district_data.shape) > 1:
+            district_data = district_data.sum(axis=1)
+            district_data_smoothed = district_data_smoothed.sum(axis=1)
         data_with_raw = pd.DataFrame({
             'count': district_data_smoothed,
             'raw': district_data,
@@ -395,7 +407,8 @@ def fix_names():
         for i in range(len(districts)):
             if rt_districts[i] != districts[i]:
                 logging.debug(f'{rt_districts[i]}: {districts[i]},')
-            assert rt_districts[i] == districts[i], (rt_districts[i], districts[i])
+                print(f'{rt_districts[i]}: {districts[i]}')
+            # assert rt_districts[i] == districts[i], (rt_districts[i], districts[i])
 
         with open(filename, 'w') as f:
             json.dump(rt_json, f)

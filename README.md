@@ -1,4 +1,6 @@
 # bd-rt-dashboard
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fnotmahi%2Fbd-rt-dashboard.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fnotmahi%2Fbd-rt-dashboard?ref=badge_shield)
+
 A dashboard to display the zoning and relevant predictions about different districts of Bangladesh.
 
 
@@ -75,3 +77,7 @@ Each of `index`, `ML`, `Low_90`, and such are lists.
 3. This will generate two files, `bd_case_history.json` and `rt_bangladesh.json`. Host them somewhere online.
 4. In `js/map.js`, line 16 and 18, change the `Rt_url` to point to the URL of `rt_bangladesh.json` file, and `caseHistoryUrl` to point to the URL of `bd_case_history.json` URL.
 5. You're done!
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fnotmahi%2Fbd-rt-dashboard.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fnotmahi%2Fbd-rt-dashboard?ref=badge_large)
